@@ -1,0 +1,6 @@
+.DS_Store
+.venv/
+.venv-elcc/
+__pycache__/
+*.py[cod]
+*.log

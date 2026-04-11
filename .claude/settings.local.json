@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3:*)",
+      "mcp__chrome-local-mcp__launch",
+      "mcp__chrome-local-mcp__navigate",
+      "mcp__chrome-local-mcp__snapshot",
+      "mcp__chrome-local-mcp__wait_for",
+      "mcp__chrome-local-mcp__click_ref",
+      "mcp__chrome-local-mcp__list_pages",
+      "Read(//Users/barry/Downloads/**)",
+      "Bash(curl -sI -L \"https://doi.org/10.1016/j.esmoop.2026.106359\")",
+      "Bash(curl -sI -L \"https://www.sciencedirect.com/science/article/pii/S2059702926003017/pdfft?isDTMRedir=true&download=true\")",
+      "mcp__chrome-local-mcp__eval",
+      "Bash(curl:*)",
+      "Read(//tmp/**)",
+      "mcp__chrome-local-mcp__close_browser"
+    ]
+  }
+}
