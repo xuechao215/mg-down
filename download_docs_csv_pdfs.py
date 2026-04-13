@@ -9,7 +9,6 @@ import io
 import json
 import math
 import re
-import signal
 import sys
 import time
 import warnings
@@ -18,7 +17,7 @@ from dataclasses import dataclass
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Iterable
-from urllib.parse import quote, unquote, urljoin, urlparse
+from urllib.parse import parse_qs, quote, unquote, urljoin, urlparse
 
 warnings.filterwarnings(
     "ignore",
@@ -60,17 +59,17 @@ except Exception:
 
 
 DOCS_DIR = BASE_DIR / "docs-csv"
-REQUEST_TIMEOUT = 10
-RETRY_COUNT = 1
+REQUEST_TIMEOUT = 20
+RETRY_COUNT = 2
 DELAY_SECONDS = 0.05
 MAX_FILENAME_LEN = 180
-ROW_TIMEOUT_SECONDS = 75
-HTML_FETCH_TIMEOUT = 8
-BROWSER_NAV_TIMEOUT_MS = 12000
+ROW_TIMEOUT_SECONDS = 150
+HTML_FETCH_TIMEOUT = 15
+BROWSER_NAV_TIMEOUT_MS = 20000
 BROWSER_RENDER_WAIT_MS = 1800
-BROWSER_BLOCK_WAIT_MS = 1800
-BROWSER_CLICK_TIMEOUT_MS = 2000
-BROWSER_DOWNLOAD_TIMEOUT_MS = 4000
+BROWSER_BLOCK_WAIT_MS = 2500
+BROWSER_CLICK_TIMEOUT_MS = 3000
+BROWSER_DOWNLOAD_TIMEOUT_MS = 8000
 BROWSER_FALLBACK_MAX_SOURCES = 8
 BROWSER_FALLBACK_MAX_CANDIDATES = 6
 BROWSER_TARGETS = (
@@ -149,6 +148,8 @@ BROWSER_CHALLENGE_HOST_MARKERS = (
     "jto.org",
     "lungcancerjournal.info",
     "ejcancer.com",
+    "clinical-lung-cancer.com",
+    "thegreenjournal.com",
     "clinicalradiologyonline.net",
     "americanjournalofsurgery.com",
     "jvir.org",
@@ -465,10 +466,6 @@ class DownloadResult:
     detail: str = ""
 
 
-class RowTimeoutError(RuntimeError):
-    pass
-
-
 COOKIE_CACHE: dict[str, object | None] = {}
 CROSSREF_CACHE: dict[str, dict] = {}
 OPENALEX_CACHE: dict[str, dict] = {}
@@ -539,22 +536,23 @@ def build_session() -> std_requests.Session:
     return session
 
 
-def _raise_row_timeout(signum, frame) -> None:
-    raise RowTimeoutError(f"row_timeout>{ROW_TIMEOUT_SECONDS}s")
+def row_deadline() -> float | None:
+    if ROW_TIMEOUT_SECONDS <= 0:
+        return None
+    return time.monotonic() + ROW_TIMEOUT_SECONDS
 
 
-def run_with_row_timeout(callback):
-    if ROW_TIMEOUT_SECONDS <= 0 or not hasattr(signal, "SIGALRM"):
-        return callback()
+def deadline_expired(deadline: float | None) -> bool:
+    return deadline is not None and time.monotonic() >= deadline
 
-    previous_handler = signal.getsignal(signal.SIGALRM)
-    signal.signal(signal.SIGALRM, _raise_row_timeout)
-    signal.alarm(ROW_TIMEOUT_SECONDS)
-    try:
-        return callback()
-    finally:
-        signal.alarm(0)
-        signal.signal(signal.SIGALRM, previous_handler)
+
+def remaining_timeout(deadline: float | None, default_timeout: int | float, *, minimum: int | float = 1) -> int | float:
+    if deadline is None:
+        return default_timeout
+    remaining = deadline - time.monotonic()
+    if remaining <= minimum:
+        return minimum
+    return min(default_timeout, remaining)
 
 
 def is_pdf_bytes(content: bytes, content_type: str = "") -> bool:
@@ -566,6 +564,16 @@ def is_pdf_bytes(content: bytes, content_type: str = "") -> bool:
 
 def normalized_text(value: str) -> str:
     return html.unescape((value or "").replace("\\/", "/")).strip()
+
+
+def format_exception(exc: Exception, prefix: str = "", *, limit: int = 240) -> str:
+    detail = re.sub(r"\s+", " ", normalized_text(str(exc)))
+    head = type(exc).__name__
+    if prefix:
+        head = f"{prefix}:{head}"
+    if detail:
+        return f"{head}:{detail[:limit]}"
+    return head
 
 
 def pick_source_url(row: dict[str, str]) -> str:
@@ -807,14 +815,14 @@ def browser_source_allowed(row: dict[str, str], url: str) -> bool:
         return True
 
     if any(marker in host for marker in BROWSER_CHALLENGE_HOST_MARKERS):
-        return False
+        return True
 
     if any(marker in host for marker in BROWSER_HELPFUL_HOST_MARKERS):
         return True
 
     doi = doi_suffix(row.get("DOI") or "").lower()
     if host in IGNORED_BLOCK_HOSTS:
-        return doi.startswith(BROWSER_DOI_PREFIXES) or bool(expected_pmcid(row))
+        return bool(doi) or bool(expected_pmcid(row))
 
     if not url_looks_pdfish(url) and url_contains_row_identifiers(url, row):
         return True
@@ -827,36 +835,117 @@ def browser_source_priority(row: dict[str, str], url: str) -> tuple[int, int]:
     lowered = normalized_text(url).lower()
 
     if host in IGNORED_BLOCK_HOSTS and not url_looks_pdfish(url):
-        return (0, 0)
+        return (8, 0)
     if host.endswith("pmc.ncbi.nlm.nih.gov") and not url_looks_pdfish(url):
         return (1, 0)
     if host.endswith("pmc.ncbi.nlm.nih.gov") and url_looks_pdfish(url):
         return (2, 0)
-    if any(marker in host for marker in ("onlinelibrary.wiley.com", "tandfonline.com", "ascopubs.org", "nejm.org")):
+    if any(marker in host for marker in BROWSER_CHALLENGE_HOST_MARKERS) and not url_looks_pdfish(url):
         return (3, 0)
-    if any(marker in host for marker in ("karger.com", "jnccn.org", "bmj.com")) and not url_looks_pdfish(url):
+    if any(marker in host for marker in BROWSER_CHALLENGE_HOST_MARKERS) and url_looks_pdfish(url):
         return (4, 0)
-    if any(marker in host for marker in ("karger.com", "jnccn.org", "bmj.com")) and url_looks_pdfish(url):
+    if any(marker in host for marker in ("karger.com", "jnccn.org", "bmj.com")) and not url_looks_pdfish(url):
         return (5, 0)
-    if any(marker in host for marker in ("link.springer.com", "springer.com", "nature.com")) and not url_looks_pdfish(url):
+    if any(marker in host for marker in ("karger.com", "jnccn.org", "bmj.com")) and url_looks_pdfish(url):
         return (6, 0)
-    if any(marker in host for marker in ("karger.com", "jnccn.org", "bmj.com")):
+    if any(marker in host for marker in ("link.springer.com", "springer.com", "nature.com")) and not url_looks_pdfish(url):
         return (7, 0)
-    if any(marker in host for marker in ("link.springer.com", "springer.com", "nature.com")) and url_looks_pdfish(url):
+    if any(marker in host for marker in ("karger.com", "jnccn.org", "bmj.com")):
         return (8, 0)
-    if "jamanetwork.com" in host and url_looks_pdfish(url):
+    if any(marker in host for marker in ("link.springer.com", "springer.com", "nature.com")) and url_looks_pdfish(url):
         return (9, 0)
-    if "jamanetwork.com" in host:
+    if "jamanetwork.com" in host and url_looks_pdfish(url):
         return (10, 0)
-    if not url_looks_pdfish(url) and url_contains_row_identifiers(url, row):
+    if "jamanetwork.com" in host:
         return (11, 0)
-    if url_looks_pdfish(url):
+    if not url_looks_pdfish(url) and url_contains_row_identifiers(url, row):
         return (12, 0)
-    return (13, len(lowered))
+    if url_looks_pdfish(url):
+        return (13, 0)
+    return (14, len(lowered))
 
 
 def host_for(url: str) -> str:
     return urlparse(url or "").netloc.lower()
+
+
+def browser_source_family(url: str) -> str:
+    host = host_for(url)
+    if not host:
+        return ""
+
+    if host == "linkinghub.elsevier.com" or any(
+        marker in host
+        for marker in (
+            "sciencedirect.com",
+            "elsevier.com",
+            "jto.org",
+            "lungcancerjournal.info",
+            "ejcancer.com",
+            "clinical-lung-cancer.com",
+            "thegreenjournal.com",
+            "clinicalradiologyonline.net",
+            "americanjournalofsurgery.com",
+            "jvir.org",
+        )
+    ):
+        return "elsevier"
+
+    if any(marker in host for marker in ("onlinelibrary.wiley.com", "wiley.com")):
+        return "wiley"
+    if any(marker in host for marker in ("journals.lww.com", "ovid.com")):
+        return "lww"
+    if "tandfonline.com" in host:
+        return "tandf"
+    if "aacrjournals.org" in host:
+        return "aacr"
+    return host
+
+
+def condense_browser_sources(source_urls: list[str]) -> list[str]:
+    if not source_urls:
+        return []
+
+    has_elsevier_article = any(
+        browser_source_family(url) == "elsevier"
+        and host_for(url) != "linkinghub.elsevier.com"
+        and not url_looks_pdfish(url)
+        for url in source_urls
+    )
+
+    family_total_counts: dict[str, int] = {}
+    family_html_counts: dict[str, int] = {}
+    family_pdf_counts: dict[str, int] = {}
+    condensed: list[str] = []
+
+    for url in source_urls:
+        family = browser_source_family(url)
+        host = host_for(url)
+        is_pdf = url_looks_pdfish(url)
+
+        if family == "elsevier" and has_elsevier_article and host == "linkinghub.elsevier.com":
+            continue
+
+        total_limit = 3 if family == "elsevier" else 4
+        html_limit = 2 if family == "elsevier" else 3
+        pdf_limit = 1 if family in {"elsevier", "wiley", "lww", "tandf"} else 2
+
+        if family_total_counts.get(family, 0) >= total_limit:
+            continue
+
+        if is_pdf:
+            if family_pdf_counts.get(family, 0) >= pdf_limit:
+                continue
+            family_pdf_counts[family] = family_pdf_counts.get(family, 0) + 1
+        else:
+            if family_html_counts.get(family, 0) >= html_limit:
+                continue
+            family_html_counts[family] = family_html_counts.get(family, 0) + 1
+
+        family_total_counts[family] = family_total_counts.get(family, 0) + 1
+        condensed.append(url)
+
+    return condensed
 
 
 def blocked_host_detail(url: str) -> str:
@@ -913,6 +1002,7 @@ def request_with_retries(
     accept: str,
     referer: str = "",
     timeout: int = REQUEST_TIMEOUT,
+    deadline: float | None = None,
 ):
     last_error: Exception | None = None
     headers = {"Accept": accept}
@@ -920,11 +1010,13 @@ def request_with_retries(
         headers["Referer"] = referer
 
     for attempt in range(1, RETRY_COUNT + 1):
+        if deadline_expired(deadline):
+            raise TimeoutError(f"row_timeout>{ROW_TIMEOUT_SECONDS}s")
         try:
             response = session.get(
                 url,
                 headers=headers,
-                timeout=timeout,
+                timeout=remaining_timeout(deadline, timeout),
                 allow_redirects=True,
             )
             return response
@@ -962,6 +1054,7 @@ def advanced_request(
     referer: str = "",
     timeout: int = REQUEST_TIMEOUT,
     return_last: bool = False,
+    deadline: float | None = None,
 ):
     if curl_requests is None:
         return None
@@ -976,8 +1069,12 @@ def advanced_request(
     last_response = None
 
     for round_idx in range(ADVANCED_COOKIE_ROUNDS):
+        if deadline_expired(deadline):
+            return last_response if return_last else None
         cookie_jar = load_cookie_jar(url, refresh=round_idx > 0)
         for impersonation in ADVANCED_IMPERSONATIONS:
+            if deadline_expired(deadline):
+                return last_response if return_last else None
             try:
                 response = curl_requests.get(
                     url,
@@ -985,7 +1082,7 @@ def advanced_request(
                     cookies=cookie_jar,
                     impersonate=impersonation,
                     allow_redirects=True,
-                    timeout=timeout,
+                    timeout=remaining_timeout(deadline, timeout),
                 )
             except Exception:
                 time.sleep(ADVANCED_DELAY_SECONDS)
@@ -1004,6 +1101,7 @@ def fetch_html_response(
     url: str,
     *,
     referer: str = "",
+    deadline: float | None = None,
 ):
     advanced_first = should_try_advanced_first(url)
     response = None
@@ -1016,6 +1114,7 @@ def fetch_html_response(
                 accept=HTML_ACCEPT,
                 referer=referer,
                 timeout=HTML_FETCH_TIMEOUT,
+                deadline=deadline,
             )
         except RequestException:
             response = None
@@ -1029,6 +1128,7 @@ def fetch_html_response(
         referer=referer,
         timeout=HTML_FETCH_TIMEOUT,
         return_last=True,
+        deadline=deadline,
     )
     if response_matches_accept(advanced, HTML_ACCEPT):
         return advanced
@@ -1041,6 +1141,7 @@ def fetch_html_response(
                 accept=HTML_ACCEPT,
                 referer=referer,
                 timeout=HTML_FETCH_TIMEOUT,
+                deadline=deadline,
             )
         except RequestException:
             response = None
@@ -1050,11 +1151,14 @@ def fetch_html_response(
     return advanced or response
 
 
-def fetch_metadata_json(url: str) -> dict:
-    response = advanced_request(url, accept="application/json") or std_requests.get(
+def fetch_metadata_json(url: str, *, deadline: float | None = None) -> dict:
+    if deadline_expired(deadline):
+        return {}
+
+    response = advanced_request(url, accept="application/json", deadline=deadline) or std_requests.get(
         url,
         headers={"User-Agent": USER_AGENT, "Accept": "application/json"},
-        timeout=REQUEST_TIMEOUT,
+        timeout=remaining_timeout(deadline, REQUEST_TIMEOUT),
     )
     if not response or response.status_code >= 400:
         return {}
@@ -1473,6 +1577,7 @@ def derive_article_urls_from_url(url: str) -> list[str]:
         return []
 
     parsed = urlparse(raw_url)
+    query = parse_qs(parsed.query or "")
     host = parsed.netloc.lower()
     path = parsed.path or ""
     lowered = normalized_text(unquote(raw_url)).lower()
@@ -1499,10 +1604,20 @@ def derive_article_urls_from_url(url: str) -> list[str]:
     if "/article-pdf/" in lowered:
         candidates.append(raw_url.replace("/article-pdf/", "/article/").split("?", 1)[0])
 
+    for redirect_key in ("Redirect", "redirect", "target", "url"):
+        for value in query.get(redirect_key, []):
+            redirected = normalized_text(unquote(value))
+            if redirected.startswith("http://") or redirected.startswith("https://"):
+                candidates.append(redirected)
+
     if host in {
         "www.jto.org",
         "www.lungcancerjournal.info",
         "www.ejcancer.com",
+        "clinical-lung-cancer.com",
+        "www.clinical-lung-cancer.com",
+        "thegreenjournal.com",
+        "www.thegreenjournal.com",
         "www.clinicalradiologyonline.net",
         "www.americanjournalofsurgery.com",
         "www.jvir.org",
@@ -1512,6 +1627,12 @@ def derive_article_urls_from_url(url: str) -> list[str]:
             article_url = article_url[: -len("/pdf")]
             candidates.append(article_url)
             candidates.append(f"{article_url}/fulltext")
+        retrieve_match = re.search(r"/retrieve/pii/([A-Z0-9()\-]+)", article_url, flags=re.IGNORECASE)
+        if retrieve_match:
+            pii = re.sub(r"[^A-Za-z0-9]", "", retrieve_match.group(1)).upper()
+            candidates.append(f"https://{host}/retrieve/pii/{pii}")
+            candidates.append(f"https://{host}/article/{pii}/fulltext")
+            candidates.append(f"https://{host}/article/{pii}/abstract")
 
     if "sciencedirect.com/science/article/pii/" in lowered and "pdfft" in lowered:
         pii = extract_pii(raw_url)
@@ -1576,32 +1697,32 @@ def build_direct_pdf_urls(
     return unique_urls(candidates)
 
 
-def fetch_crossref_metadata(row: dict[str, str]) -> dict:
+def fetch_crossref_metadata(row: dict[str, str], *, deadline: float | None = None) -> dict:
     doi = doi_suffix(row.get("DOI") or "")
     if not doi:
         return {}
     if doi not in CROSSREF_CACHE:
-        payload = fetch_metadata_json(CROSSREF_API.format(doi=quote(doi, safe="")))
+        payload = fetch_metadata_json(CROSSREF_API.format(doi=quote(doi, safe="")), deadline=deadline)
         CROSSREF_CACHE[doi] = payload.get("message", {}) if payload else {}
     return CROSSREF_CACHE[doi]
 
 
-def fetch_openalex_metadata(row: dict[str, str]) -> dict:
+def fetch_openalex_metadata(row: dict[str, str], *, deadline: float | None = None) -> dict:
     doi = doi_suffix(row.get("DOI") or "")
     if not doi:
         return {}
     if doi not in OPENALEX_CACHE:
-        OPENALEX_CACHE[doi] = fetch_metadata_json(OPENALEX_API.format(doi=quote(doi, safe="")))
+        OPENALEX_CACHE[doi] = fetch_metadata_json(OPENALEX_API.format(doi=quote(doi, safe="")), deadline=deadline)
     return OPENALEX_CACHE[doi] or {}
 
 
-def fetch_pubmed_linkouts(row: dict[str, str]) -> list[str]:
+def fetch_pubmed_linkouts(row: dict[str, str], *, deadline: float | None = None) -> list[str]:
     pmid = expected_pmid(row)
     if not pmid:
         return []
 
     if pmid not in PUBMED_LINKOUT_CACHE:
-        payload = fetch_metadata_json(PUBMED_ELINK_API.format(pmid=quote(pmid, safe="")))
+        payload = fetch_metadata_json(PUBMED_ELINK_API.format(pmid=quote(pmid, safe="")), deadline=deadline)
         linksets = payload.get("linksets") or []
         objurls = ((linksets[0].get("idurllist") or [{}])[0].get("objurls") or []) if linksets else []
 
@@ -1625,7 +1746,7 @@ def fetch_pubmed_linkouts(row: dict[str, str]) -> list[str]:
     return PUBMED_LINKOUT_CACHE.get(pmid, [])
 
 
-def fetch_pubmed_prlinks_target(row: dict[str, str]) -> str:
+def fetch_pubmed_prlinks_target(row: dict[str, str], *, deadline: float | None = None) -> str:
     pmid = expected_pmid(row)
     if not pmid:
         return ""
@@ -1637,6 +1758,7 @@ def fetch_pubmed_prlinks_target(row: dict[str, str]) -> str:
             accept="text/html,*/*",
             timeout=HTML_FETCH_TIMEOUT,
             return_last=True,
+            deadline=deadline,
         )
         if response is not None:
             text = response_to_text(response)
@@ -1650,7 +1772,12 @@ def fetch_pubmed_prlinks_target(row: dict[str, str]) -> str:
     return PUBMED_PRLINKS_CACHE.get(pmid, "")
 
 
-def build_source_urls(row: dict[str, str], *, include_metadata: bool = True) -> list[str]:
+def build_source_urls(
+    row: dict[str, str],
+    *,
+    include_metadata: bool = True,
+    deadline: float | None = None,
+) -> list[str]:
     sources: list[str] = []
 
     second_link = (row.get("second_link") or "").strip()
@@ -1678,15 +1805,15 @@ def build_source_urls(row: dict[str, str], *, include_metadata: bool = True) -> 
             sources.append(candidate)
 
     if include_metadata:
-        prlinks_target = fetch_pubmed_prlinks_target(row)
+        prlinks_target = fetch_pubmed_prlinks_target(row, deadline=deadline)
         if prlinks_target:
             sources.append(prlinks_target)
 
-        for candidate in fetch_pubmed_linkouts(row):
+        for candidate in fetch_pubmed_linkouts(row, deadline=deadline):
             if candidate and not url_looks_supplementary(candidate) and not url_looks_non_article(candidate):
                 sources.append(candidate)
 
-        crossref = fetch_crossref_metadata(row)
+        crossref = fetch_crossref_metadata(row, deadline=deadline)
         for link in crossref.get("link", []) or []:
             url = link.get("URL")
             if url and not url_looks_supplementary(url) and not url_looks_non_article(url):
@@ -1694,7 +1821,7 @@ def build_source_urls(row: dict[str, str], *, include_metadata: bool = True) -> 
         if crossref.get("URL"):
             sources.append(crossref["URL"])
 
-        openalex = fetch_openalex_metadata(row)
+        openalex = fetch_openalex_metadata(row, deadline=deadline)
         best_oa = openalex.get("best_oa_location") or {}
         open_access = openalex.get("open_access") or {}
         for candidate in (
@@ -1709,7 +1836,7 @@ def build_source_urls(row: dict[str, str], *, include_metadata: bool = True) -> 
     for source in list(sources):
         derived_sources.extend(derive_article_urls_from_url(source))
 
-    return unique_urls([*sources, *derived_sources])
+    return unique_urls([*derived_sources, *sources])
 
 
 def collect_pubmed_source_urls(
@@ -1879,6 +2006,7 @@ class BrowserPDFDownloader:
         self._contexts: dict[str, object] = {}
         self._launch_errors: dict[str, str] = {}
         self._loaded_cookie_keys: set[tuple[str, str, str, str]] = set()
+        self._playwright_error: str = ""
 
     def available(self) -> bool:
         return sync_playwright is not None and any(path.exists() for _, _, path in BROWSER_TARGETS)
@@ -1898,7 +2026,12 @@ class BrowserPDFDownloader:
                 pass
         self._browsers.clear()
 
-        if self._manager is not None:
+        if self._playwright is not None:
+            try:
+                self._playwright.stop()
+            except Exception:
+                pass
+        elif self._manager is not None and hasattr(self._manager, "stop"):
             try:
                 self._manager.stop()
             except Exception:
@@ -1906,15 +2039,30 @@ class BrowserPDFDownloader:
 
         self._manager = None
         self._playwright = None
+        self._playwright_error = ""
+        self._launch_errors.clear()
         self._loaded_cookie_keys.clear()
 
     def _ensure_playwright(self) -> bool:
         if sync_playwright is None:
+            self._playwright_error = "playwright_unavailable"
             return False
 
         if self._playwright is None:
-            self._manager = sync_playwright()
-            self._playwright = self._manager.start()
+            try:
+                self._manager = sync_playwright()
+                self._playwright = self._manager.start()
+            except Exception as exc:
+                try:
+                    if self._manager is not None:
+                        if hasattr(self._manager, "stop"):
+                            self._manager.stop()
+                except Exception:
+                    pass
+                self._manager = None
+                self._playwright = None
+                self._playwright_error = format_exception(exc, "start_failed", limit=180)
+                return False
 
         return True
 
@@ -1922,15 +2070,18 @@ class BrowserPDFDownloader:
         if browser_name in self._contexts:
             return self._contexts[browser_name]
 
-        if browser_name in self._launch_errors:
+        cached_error = self._launch_errors.get(browser_name)
+        if cached_error and cached_error.startswith(("missing_browser", "playwright_unavailable")):
             return None
+        if cached_error:
+            self._launch_errors.pop(browser_name, None)
 
         if not executable_path.exists():
             self._launch_errors[browser_name] = "missing_browser"
             return None
 
         if not self._ensure_playwright():
-            self._launch_errors[browser_name] = "playwright_unavailable"
+            self._launch_errors[browser_name] = self._playwright_error or "playwright_unavailable"
             return None
 
         launcher = getattr(self._playwright, engine_name)
@@ -1941,6 +2092,7 @@ class BrowserPDFDownloader:
         if engine_name == "chromium":
             launch_kwargs["args"] = list(PLAYWRIGHT_LAUNCH_ARGS)
 
+        browser = None
         try:
             browser = launcher.launch(**launch_kwargs)
             context = browser.new_context(
@@ -1951,7 +2103,12 @@ class BrowserPDFDownloader:
                 extra_http_headers={"Accept-Language": "en-US,en;q=0.9"},
             )
         except Exception as exc:
-            self._launch_errors[browser_name] = f"launch_failed:{type(exc).__name__}"
+            try:
+                if browser is not None:
+                    browser.close()
+            except Exception:
+                pass
+            self._launch_errors[browser_name] = format_exception(exc, "launch_failed", limit=220)
             return None
 
         self._browsers[browser_name] = browser
@@ -2040,7 +2197,7 @@ class BrowserPDFDownloader:
             download.save_as(str(temp_path))
             content = temp_path.read_bytes()
         except Exception as exc:
-            return False, f"download_save_failed:{type(exc).__name__}"
+            return False, format_exception(exc, "download_save_failed", limit=180)
         finally:
             try:
                 temp_path.unlink()
@@ -2086,7 +2243,7 @@ class BrowserPDFDownloader:
         try:
             body = response.body()
         except Exception as exc:
-            return False, type(exc).__name__
+            return False, format_exception(exc, limit=180)
 
         content_type = ""
         try:
@@ -2114,7 +2271,10 @@ class BrowserPDFDownloader:
         output_path: Path,
         *,
         referer: str = "",
+        deadline: float | None = None,
     ) -> tuple[bool, str]:
+        if deadline_expired(deadline):
+            return False, f"row_timeout>{ROW_TIMEOUT_SECONDS}s"
         headers = {"Accept": PDF_ACCEPT}
         if referer:
             headers["Referer"] = referer
@@ -2125,11 +2285,11 @@ class BrowserPDFDownloader:
             response = context.request.get(
                 url,
                 headers=headers,
-                timeout=BROWSER_NAV_TIMEOUT_MS,
+                timeout=int(remaining_timeout(deadline, BROWSER_NAV_TIMEOUT_MS / 1000, minimum=1) * 1000),
                 fail_on_status_code=False,
             )
         except Exception as exc:
-            return False, type(exc).__name__
+            return False, format_exception(exc, limit=180)
 
         return self._try_playwright_response(response, row, output_path, request_url=url)
 
@@ -2141,14 +2301,18 @@ class BrowserPDFDownloader:
         output_path: Path,
         *,
         referer: str = "",
+        deadline: float | None = None,
     ) -> tuple[bool, str]:
+        if deadline_expired(deadline):
+            return False, f"row_timeout>{ROW_TIMEOUT_SECONDS}s"
         try:
             if referer:
                 page.set_extra_http_headers({"Referer": referer})
-            response = page.goto(url, wait_until="domcontentloaded", timeout=BROWSER_NAV_TIMEOUT_MS)
+            nav_timeout = int(remaining_timeout(deadline, BROWSER_NAV_TIMEOUT_MS / 1000, minimum=1) * 1000)
+            response = page.goto(url, wait_until="domcontentloaded", timeout=nav_timeout)
             page.wait_for_timeout(1200)
         except Exception as exc:
-            return False, f"navigate_pdf:{type(exc).__name__}"
+            return False, format_exception(exc, "navigate_pdf", limit=180)
         finally:
             try:
                 page.set_extra_http_headers({})
@@ -2301,7 +2465,7 @@ class BrowserPDFDownloader:
                         target.click(timeout=BROWSER_CLICK_TIMEOUT_MS)
                         page.wait_for_timeout(1200)
                     except Exception as exc:
-                        last_detail = f"click_failed:{type(exc).__name__}"
+                        last_detail = format_exception(exc, "click_failed", limit=180)
                     continue
 
                 ok, detail = self._save_download_artifact(
@@ -2325,16 +2489,20 @@ class BrowserPDFDownloader:
         output_path: Path,
         *,
         referer: str = "",
+        deadline: float | None = None,
     ) -> tuple[bool, str]:
         last_detail = "no_browser_candidate"
 
         for candidate_url in candidate_urls[:BROWSER_FALLBACK_MAX_CANDIDATES]:
+            if deadline_expired(deadline):
+                return False, f"row_timeout>{ROW_TIMEOUT_SECONDS}s"
             ok, detail = self._try_request_pdf(
                 context,
                 row,
                 candidate_url,
                 output_path,
                 referer=referer,
+                deadline=deadline,
             )
             if ok:
                 return True, detail
@@ -2349,6 +2517,7 @@ class BrowserPDFDownloader:
                 candidate_url,
                 output_path,
                 referer=referer,
+                deadline=deadline,
             )
             if ok:
                 return True, detail
@@ -2418,7 +2587,7 @@ class BrowserPDFDownloader:
             )
             content = temp_path.read_bytes()
         except Exception as exc:
-            return False, f"print_failed:{type(exc).__name__}"
+            return False, format_exception(exc, "print_failed", limit=180)
         finally:
             try:
                 temp_path.unlink()
@@ -2439,7 +2608,11 @@ class BrowserPDFDownloader:
         row: dict[str, str],
         start_url: str,
         output_path: Path,
+        *,
+        deadline: float | None = None,
     ) -> tuple[bool, str]:
+        if deadline_expired(deadline):
+            return False, f"row_timeout>{ROW_TIMEOUT_SECONDS}s"
         page = context.new_page()
         responses: list = []
         last_detail = "browser_no_pdf"
@@ -2470,22 +2643,26 @@ class BrowserPDFDownloader:
 
         try:
             if url_looks_pdfish(start_url):
-                ok, detail = self._try_request_pdf(context, row, start_url, output_path)
+                ok, detail = self._try_request_pdf(context, row, start_url, output_path, deadline=deadline)
                 if ok:
                     return True, detail
                 last_detail = f"{start_url} -> {detail}"
 
             try:
-                response = page.goto(start_url, wait_until="domcontentloaded", timeout=BROWSER_NAV_TIMEOUT_MS)
+                nav_timeout = int(remaining_timeout(deadline, BROWSER_NAV_TIMEOUT_MS / 1000, minimum=1) * 1000)
+                response = page.goto(start_url, wait_until="domcontentloaded", timeout=nav_timeout)
             except Exception as exc:
                 try:
+                    nav_timeout = int(
+                        remaining_timeout(deadline, max(5000, BROWSER_NAV_TIMEOUT_MS // 2) / 1000, minimum=1) * 1000
+                    )
                     response = page.goto(
                         start_url,
                         wait_until="commit",
-                        timeout=max(5000, BROWSER_NAV_TIMEOUT_MS // 2),
+                        timeout=nav_timeout,
                     )
                 except Exception:
-                    return False, f"{start_url} -> navigate:{type(exc).__name__}"
+                    return False, f"{start_url} -> {format_exception(exc, 'navigate', limit=180)}"
 
             page.wait_for_timeout(BROWSER_RENDER_WAIT_MS)
 
@@ -2557,6 +2734,7 @@ class BrowserPDFDownloader:
                 candidate_urls,
                 output_path,
                 referer=page.url or start_url,
+                deadline=deadline,
             )
             if ok:
                 return True, detail
@@ -2582,6 +2760,7 @@ class BrowserPDFDownloader:
                 candidate_urls,
                 output_path,
                 referer=page.url or start_url,
+                deadline=deadline,
             )
             if ok:
                 return True, detail
@@ -2631,7 +2810,11 @@ class BrowserPDFDownloader:
         row: dict[str, str],
         source_urls: list[str],
         output_path: Path,
+        *,
+        deadline: float | None = None,
     ) -> DownloadResult:
+        if deadline_expired(deadline):
+            return DownloadResult(False, "", f"row_timeout>{ROW_TIMEOUT_SECONDS}s")
         if not self.available():
             return DownloadResult(False, "", "browser_unavailable")
 
@@ -2649,22 +2832,35 @@ class BrowserPDFDownloader:
 
         prioritized_sources = unique_urls(prioritized_sources)
         prioritized_sources.sort(key=lambda source_url: browser_source_priority(row, source_url))
+        prioritized_sources = condense_browser_sources(prioritized_sources)
         prioritized_sources = prioritized_sources[:BROWSER_FALLBACK_MAX_SOURCES]
         if not prioritized_sources:
             return DownloadResult(False, "", "browser_skipped")
 
         errors: list[str] = []
         for browser_name, engine_name, executable_path in BROWSER_TARGETS:
+            if deadline_expired(deadline):
+                break
             context = self._context_for(browser_name, engine_name, executable_path)
             if context is None:
                 errors.append(f"{browser_name}:{self._launch_errors.get(browser_name, 'launch_failed')}")
                 continue
 
+            family_block_counts: dict[str, int] = {}
             for start_url in prioritized_sources:
-                ok, detail = self._download_with_context(context, row, start_url, output_path)
+                if deadline_expired(deadline):
+                    errors.append(f"{browser_name}:row_timeout>{ROW_TIMEOUT_SECONDS}s")
+                    break
+                family = browser_source_family(start_url)
+                if family and family_block_counts.get(family, 0) >= 2:
+                    errors.append(f"{browser_name}:{family}:block_page_budget")
+                    continue
+                ok, detail = self._download_with_context(context, row, start_url, output_path, deadline=deadline)
                 if ok:
                     return DownloadResult(True, detail, f"browser_{browser_name}")
                 errors.append(f"{browser_name}:{detail}")
+                if "block_page" in detail and family:
+                    family_block_counts[family] = family_block_counts.get(family, 0) + 1
 
         summary = " | ".join(unique_urls(errors)[:6]) or "browser_failed"
         return DownloadResult(False, "", summary)
@@ -2677,15 +2873,14 @@ def try_download_pdf(
     output_path: Path,
     *,
     referer: str = "",
+    deadline: float | None = None,
 ) -> tuple[bool, str]:
-    cached_block = blocked_host_detail(url)
-    if cached_block:
-        return False, f"host_blocked_cached:{host_for(url)}"
-
     errors: list[str] = []
     order = ("advanced", "standard") if should_try_advanced_first(url) else ("standard", "advanced")
 
     for mode in order:
+        if deadline_expired(deadline):
+            return False, f"row_timeout>{ROW_TIMEOUT_SECONDS}s"
         if mode == "advanced":
             advanced = advanced_request(
                 url,
@@ -2693,6 +2888,7 @@ def try_download_pdf(
                 referer=referer,
                 timeout=REQUEST_TIMEOUT,
                 return_last=True,
+                deadline=deadline,
             )
             if advanced is None:
                 continue
@@ -2715,10 +2911,13 @@ def try_download_pdf(
                 url,
                 accept=PDF_ACCEPT,
                 referer=referer,
+                deadline=deadline,
             )
+        except TimeoutError:
+            return False, f"row_timeout>{ROW_TIMEOUT_SECONDS}s"
         except RequestException as exc:
             response = None
-            errors.append(type(exc).__name__)
+            errors.append(format_exception(exc, limit=180))
 
         if response is None:
             continue
@@ -2750,14 +2949,16 @@ def download_row(
     csv_path: Path,
     row: dict[str, str],
     browser_downloader: BrowserPDFDownloader | None = None,
+    *,
+    deadline: float | None = None,
 ) -> DownloadResult:
     output_path = output_path_for(csv_path, row)
     if valid_existing_pdf(output_path, row, row.get("pdf_url") or ""):
         return DownloadResult(True, row.get("pdf_url", ""), "already_exists")
 
-    source_urls = build_source_urls(row, include_metadata=False)
+    source_urls = build_source_urls(row, include_metadata=False, deadline=deadline)
     if not source_urls:
-        source_urls = build_source_urls(row, include_metadata=True)
+        source_urls = build_source_urls(row, include_metadata=True, deadline=deadline)
         if not source_urls:
             return DownloadResult(False, "", "missing_second_link_and_doi")
 
@@ -2769,9 +2970,11 @@ def download_row(
     metadata_loaded = False
 
     while queued_sources or not metadata_loaded:
+        if deadline_expired(deadline):
+            return DownloadResult(False, "", f"row_timeout>{ROW_TIMEOUT_SECONDS}s")
         if not queued_sources and not metadata_loaded:
             metadata_loaded = True
-            for extra_source in build_source_urls(row, include_metadata=True):
+            for extra_source in build_source_urls(row, include_metadata=True, deadline=deadline):
                 if extra_source not in seen_sources and extra_source not in queued_sources:
                     queued_sources.append(extra_source)
             continue
@@ -2781,20 +2984,25 @@ def download_row(
             continue
         seen_sources.add(start_url)
 
-        cached_block = blocked_host_detail(start_url)
-        if cached_block:
-            last_detail = f"{start_url} -> host_blocked_cached:{host_for(start_url)}"
-            continue
-
         if url_looks_pdfish(start_url):
-            ok, detail = try_download_pdf(session, row, start_url, output_path, referer=doi_url_from_row(row))
+            ok, detail = try_download_pdf(
+                session,
+                row,
+                start_url,
+                output_path,
+                referer=doi_url_from_row(row),
+                deadline=deadline,
+            )
             if ok:
                 return DownloadResult(True, detail, "downloaded")
             last_detail = f"{start_url} -> {detail}"
             tried_pdf_urls.add(start_url)
             continue
 
-        response = fetch_html_response(session, start_url)
+        try:
+            response = fetch_html_response(session, start_url, deadline=deadline)
+        except TimeoutError:
+            return DownloadResult(False, "", f"row_timeout>{ROW_TIMEOUT_SECONDS}s")
         if response is None:
             last_detail = f"{start_url} -> no_response"
             continue
@@ -2835,13 +3043,20 @@ def download_row(
             if candidate in tried_pdf_urls:
                 continue
             tried_pdf_urls.add(candidate)
-            ok, detail = try_download_pdf(session, row, candidate, output_path, referer=final_url)
+            ok, detail = try_download_pdf(
+                session,
+                row,
+                candidate,
+                output_path,
+                referer=final_url,
+                deadline=deadline,
+            )
             if ok:
                 return DownloadResult(True, detail, "downloaded")
             last_detail = f"{candidate} -> {detail}"
 
     if browser_downloader is not None:
-        browser_result = browser_downloader.download_row(row, browser_sources, output_path)
+        browser_result = browser_downloader.download_row(row, browser_sources, output_path, deadline=deadline)
         if browser_result.success:
             return browser_result
         if browser_result.detail not in {"browser_skipped", "browser_unavailable"}:
@@ -2860,8 +3075,6 @@ def process_csv(csv_path: Path) -> tuple[int, int]:
         print(f"Promoted existing PDFs for {csv_path.name}: {promoted_count}", flush=True)
         rows, fieldnames = load_rows(csv_path)
 
-    preload_historical_blocked_hosts(rows)
-
     session = build_session()
     browser_downloader = BrowserPDFDownloader()
 
@@ -2876,11 +3089,15 @@ def process_csv(csv_path: Path) -> tuple[int, int]:
 
             attempted_count += 1
             try:
-                result = run_with_row_timeout(
-                    lambda: download_row(session, csv_path, row, browser_downloader)
+                result = download_row(
+                    session,
+                    csv_path,
+                    row,
+                    browser_downloader,
+                    deadline=row_deadline(),
                 )
-            except RowTimeoutError as exc:
-                result = DownloadResult(False, "", str(exc))
+            except TimeoutError:
+                result = DownloadResult(False, "", f"row_timeout>{ROW_TIMEOUT_SECONDS}s")
                 try:
                     browser_downloader.close()
                 except Exception:
@@ -2892,7 +3109,7 @@ def process_csv(csv_path: Path) -> tuple[int, int]:
                     pass
                 session = build_session()
             except Exception as exc:
-                result = DownloadResult(False, "", f"row_exception:{type(exc).__name__}")
+                result = DownloadResult(False, "", format_exception(exc, "row_exception", limit=240))
                 try:
                     browser_downloader.close()
                 except Exception:
