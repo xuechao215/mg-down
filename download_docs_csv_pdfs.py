@@ -72,6 +72,7 @@ BROWSER_CLICK_TIMEOUT_MS = 3000
 BROWSER_DOWNLOAD_TIMEOUT_MS = 8000
 BROWSER_FALLBACK_MAX_SOURCES = 8
 BROWSER_FALLBACK_MAX_CANDIDATES = 6
+ALLOW_PAGE_PRINT_PDF = False
 BROWSER_TARGETS = (
     (
         "chrome",
@@ -377,6 +378,34 @@ ARTICLE_PAGE_TEXT_MARKERS = (
     "discussion",
 )
 
+INVALID_PAGE_TEXT_MARKERS = {
+    "clinicalkey_access_page": (
+        "to access this content please choose one of the options below",
+        "request a trial id",
+        "clinicalkey",
+    ),
+    "pubmed_abstract_page": (
+        "an official website of the united states government",
+        "pubmed disclaimer",
+    ),
+}
+OVID_WEBPAGE_MARKERS = (
+    "check access",
+    "current issue",
+    "previous issues",
+    "latest articles",
+    "share",
+    "cite",
+)
+ELSEVIER_WEBPAGE_MARKERS = (
+    "download full issue",
+    "get access outline share more",
+    "affiliations notes article info",
+    "get full text access",
+    "log in subscribe or purchase for full access",
+    "search for",
+)
+
 TITLE_STOPWORDS = {
     "the",
     "and",
@@ -636,6 +665,20 @@ def extract_pmc_embargo_detail(text: str, url: str = "") -> str:
 
 def normalized_match_text(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", " ", (value or "").lower()).strip()
+
+
+def invalid_page_text_reason(text: str) -> str:
+    normalized = normalized_match_text(text)
+    if "ovid" in normalized:
+        hits = sum(marker in normalized for marker in OVID_WEBPAGE_MARKERS)
+        if hits >= 4:
+            return "ovid_webpage_print"
+    if sum(marker in normalized for marker in ELSEVIER_WEBPAGE_MARKERS) >= 4:
+        return "elsevier_webpage_print"
+    for reason, markers in INVALID_PAGE_TEXT_MARKERS.items():
+        if all(marker in normalized for marker in markers):
+            return reason
+    return ""
 
 
 def normalized_alnum(value: str) -> str:
@@ -1408,6 +1451,10 @@ def validate_pdf_for_row(
     combined_text, page_texts = extract_pdf_text(content)
     first_page_text = page_texts[0] if page_texts else combined_text
     normalized_first_page = normalized_match_text(first_page_text[:2000])
+    invalid_reason = invalid_page_text_reason(f"{first_page_text}\n{combined_text[:4000]}")
+
+    if invalid_reason:
+        return "mismatch", invalid_reason
 
     if any(marker in normalized_first_page for marker in PDF_SUPPLEMENT_TEXT_MARKERS):
         return "mismatch", "supplementary_text"
@@ -2543,6 +2590,8 @@ class BrowserPDFDownloader:
 
         if looks_like_block_page(f"{title}\n{body_text}"):
             return False
+        if invalid_page_text_reason(f"{title}\n{body_text}"):
+            return False
 
         normalized_body = normalized_match_text(body_text)
         if len(normalized_body) < 1600:
@@ -2574,6 +2623,8 @@ class BrowserPDFDownloader:
         *,
         request_url: str,
     ) -> tuple[bool, str]:
+        if not ALLOW_PAGE_PRINT_PDF:
+            return False, "print_skipped"
         if not self._page_is_printable_article(page, row, request_url=request_url):
             return False, "print_skipped"
 
