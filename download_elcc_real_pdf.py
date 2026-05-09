@@ -9,11 +9,19 @@ import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
-import browser_cookie3
-from curl_cffi import requests
-
-
 BASE_DIR = Path(__file__).resolve().parent
+VENDOR_DIR = BASE_DIR / ".vendor"
+if VENDOR_DIR.exists():
+    sys.path.insert(0, str(VENDOR_DIR))
+
+try:
+    import browser_cookie3
+    from curl_cffi import requests
+except Exception as exc:  # pragma: no cover - surfaced to the user immediately
+    raise SystemExit(
+        "Missing dependency: browser_cookie3/curl_cffi. This script expects the vendored copies in .vendor."
+    ) from exc
+
 MAP_FILE = BASE_DIR / "elcc_pii_map.json"
 OUTPUT_DIR = BASE_DIR / "ELCC"
 MANIFEST_FILE = OUTPUT_DIR / "real_pdf_manifest.json"

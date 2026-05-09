@@ -49,11 +49,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/imdylltra",
     "slug": "imdylltra",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Imdylltra (EMEA_H_C_006451).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/imdylltra-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/smop-initial/chmp-summary-positive-opinion-imdylltra_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 148044
   },
   {
     "index": 5,
@@ -63,11 +63,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/zepzelca",
     "slug": "zepzelca",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Zepzelca (EMEA_H_C_006673).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/zepzelca-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/smop-initial/chmp-summary-positive-opinion-zepzelca_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 133985
   },
   {
     "index": 6,
@@ -553,11 +553,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/mekinist",
     "slug": "mekinist",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Mekinist (EMEA_H_C_002643).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/mekinist-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/mekinist-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 809379
   },
   {
     "index": 41,
@@ -567,11 +567,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/datopotamab-deruxtecan-daiichi-sankyo",
     "slug": "datopotamab-deruxtecan-daiichi-sankyo",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Datopotamab deruxtecan Daiichi Sankyo (EMEA_H_C_006081).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/datopotamab-deruxtecan-daiichi-sankyo-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/medicine-qa/questions-answers-withdrawal-application-marketing-authorisation-datopotamab-deruxtecan-daiichi-sankyo-datopotamab-deruxtecan_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 144705
   },
   {
     "index": 42,
@@ -595,11 +595,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/braftovi",
     "slug": "braftovi",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Braftovi (EMEA_H_C_004580).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/braftovi-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/braftovi-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 938373
   },
   {
     "index": 44,
@@ -651,11 +651,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/naveruclif",
     "slug": "naveruclif",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Naveruclif (EMEA_H_C_006173).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/naveruclif-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/naveruclif-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 449115
   },
   {
     "index": 48,
@@ -665,11 +665,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/docetaxel-kabi",
     "slug": "docetaxel-kabi",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Docetaxel Kabi (EMEA_H_C_002325).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/docetaxel-kabi-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/docetaxel-kabi-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 2604152
   },
   {
     "index": 49,
@@ -679,11 +679,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/armisarte",
     "slug": "armisarte",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Armisarte (previously Pemetrexed Actavis) (EMEA_H_C_004109).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/armisarte-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/armisarte-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 647874
   },
   {
     "index": 50,
@@ -707,11 +707,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/pazenir",
     "slug": "pazenir",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Pazenir (EMEA_H_C_004441).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/pazenir-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/pazenir-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 870678
   },
   {
     "index": 52,
@@ -721,11 +721,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/rozlytrek",
     "slug": "rozlytrek",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Rozlytrek (EMEA_H_C_004936).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/rozlytrek-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/rozlytrek-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 1442426
   },
   {
     "index": 53,
@@ -735,11 +735,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/apexelsin",
     "slug": "apexelsin",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Apexelsin (EMEA_H_C_005997).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/apexelsin-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/apexelsin-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 652708
   },
   {
     "index": 54,
@@ -749,11 +749,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/pemetrexed-medac",
     "slug": "pemetrexed-medac",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Pemetrexed medac (EMEA_H_C_003905).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/pemetrexed-medac-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/pemetrexed-medac-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 352039
   },
   {
     "index": 55,
@@ -763,11 +763,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/alunbrig",
     "slug": "alunbrig",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Alunbrig (EMEA_H_C_004248).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/alunbrig-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/alunbrig-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 598255
   },
   {
     "index": 56,
@@ -791,11 +791,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/tarceva",
     "slug": "tarceva",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Tarceva (EMEA_H_C_000618).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/tarceva-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/tarceva-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 687635
   },
   {
     "index": 58,
@@ -805,11 +805,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/docetaxel-accord",
     "slug": "docetaxel-accord",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Docetaxel Accord (EMEA_H_C_002539).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/docetaxel-accord-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/docetaxel-accord-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 646404
   },
   {
     "index": 59,
@@ -819,11 +819,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/pemetrexed-fresenius-kabi",
     "slug": "pemetrexed-fresenius-kabi",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Pemetrexed Fresenius Kabi (EMEA_H_C_003895).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/pemetrexed-fresenius-kabi-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/pemetrexed-fresenius-kabi-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 1191230
   },
   {
     "index": 60,
@@ -833,11 +833,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/augtyro",
     "slug": "augtyro",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Augtyro (EMEA_H_C_006005).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/augtyro-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/augtyro-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 541910
   },
   {
     "index": 61,
@@ -861,11 +861,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/gavreto",
     "slug": "gavreto",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Gavreto (EMEA_H_C_005413).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/gavreto-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/gavreto-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 1468255
   },
   {
     "index": 63,
@@ -875,11 +875,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/vizimpro",
     "slug": "vizimpro",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Vizimpro (EMEA_H_C_004779).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/vizimpro-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/vizimpro-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 336504
   },
   {
     "index": 64,
@@ -889,11 +889,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/lumykras",
     "slug": "lumykras",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Lumykras (EMEA_H_C_005522).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/lumykras-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/lumykras-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 336552
   },
   {
     "index": 65,
@@ -903,11 +903,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/pemetrexed-sandoz",
     "slug": "pemetrexed-sandoz",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Pemetrexed Sandoz (EMEA_H_C_004011).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/pemetrexed-sandoz-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/pemetrexed-sandoz-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 1837229
   },
   {
     "index": 66,
@@ -917,11 +917,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/onbevzi",
     "slug": "onbevzi",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Onbevzi (EMEA_H_C_005640).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/onbevzi-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/overview/onbevzi-epar-medicine-overview_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 152808
   },
   {
     "index": 67,
@@ -931,11 +931,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/ciambra",
     "slug": "ciambra",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Ciambra (EMEA_H_C_003788).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/ciambra-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/ciambra-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 2827267
   },
   {
     "index": 68,
@@ -945,11 +945,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/gefitinib-mylan",
     "slug": "gefitinib-mylan",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Gefitinib Mylan (EMEA_H_C_004826).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/gefitinib-mylan-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/gefitinib-mylan-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 1451350
   },
   {
     "index": 69,
@@ -959,11 +959,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/tremelimumab-astrazeneca",
     "slug": "tremelimumab-astrazeneca",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Tremelimumab AstraZeneca (EMEA_H_C_004650).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/tremelimumab-astrazeneca-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/tremelimumab-astrazeneca-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 1163488
   },
   {
     "index": 70,
@@ -973,11 +973,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/tizveni",
     "slug": "tizveni",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Tizveni (EMEA_H_C_005542).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/tizveni-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/tizveni-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 1299949
   },
   {
     "index": 71,
@@ -987,11 +987,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/taxotere",
     "slug": "taxotere",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Taxotere (EMEA_H_C_000073).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/taxotere-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/taxotere-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 2252828
   },
   {
     "index": 72,
@@ -1001,11 +1001,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/pemetrexed-krka",
     "slug": "pemetrexed-krka",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Pemetrexed Krka (EMEA_H_C_003958).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/pemetrexed-krka-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/pemetrexed-krka-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 1228962
   },
   {
     "index": 73,
@@ -1015,11 +1015,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/tepmetko",
     "slug": "tepmetko",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Tepmetko (EMEA_H_C_005524).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/tepmetko-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/tepmetko-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 271662
   },
   {
     "index": 74,
@@ -1029,11 +1029,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/iressa",
     "slug": "iressa",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Iressa (EMEA_H_C_001016).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/iressa-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/iressa-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 267684
   },
   {
     "index": 75,
@@ -1043,11 +1043,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/pemetrexed-baxter",
     "slug": "pemetrexed-baxter",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Pemetrexed Baxter (EMEA_H_C_005848).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/pemetrexed-baxter-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/pemetrexed-baxter-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 660755
   },
   {
     "index": 76,
@@ -1057,11 +1057,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/exkivity",
     "slug": "exkivity",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Exkivity (EMEA_H_C_005621).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/exkivity-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/medicine-qa/questions-and-answers-withdrawal-marketing-authorisation-exkivity-mobocertinib_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 145802
   },
   {
     "index": 77,
@@ -1071,11 +1071,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/docetaxel-zentiva",
     "slug": "docetaxel-zentiva",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Docetaxel Zentiva (previously Docetaxel Winthrop) (EMEA_H_C_000808).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/docetaxel-zentiva-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/docetaxel-zentiva-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 1518485
   },
   {
     "index": 78,
@@ -1085,11 +1085,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/docetaxel-teva",
     "slug": "docetaxel-teva",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Docetaxel Teva (EMEA_H_C_001107).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/docetaxel-teva-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/docetaxel-teva-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 2411362
   },
   {
     "index": 79,
@@ -1099,11 +1099,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/pemetrexed-lilly",
     "slug": "pemetrexed-lilly",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Pemetrexed Lilly (EMEA_H_C_004114).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/pemetrexed-lilly-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/pemetrexed-lilly-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 1562908
   },
   {
     "index": 80,
@@ -1113,11 +1113,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/equidacent",
     "slug": "equidacent",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Equidacent (EMEA_H_C_005181).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/equidacent-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/equidacent-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 1935978
   },
   {
     "index": 81,
@@ -1127,11 +1127,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/pemetrexed-pfizer-previously-pemetrexed-hospira-uk-limited",
     "slug": "pemetrexed-pfizer-previously-pemetrexed-hospira-uk-limited",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Pemetrexed Pfizer (previously Pemetrexed Hospira UK Limited) (EMEA_H_C_004488).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/pemetrexed-pfizer-previously-pemetrexed-hospira-uk-limited-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/pemetrexed-pfizer-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 699895
   },
   {
     "index": 82,
@@ -1155,11 +1155,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/lextemy",
     "slug": "lextemy",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Lextemy (EMEA_H_C_005611).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/lextemy-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/lextemy-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 1768529
   },
   {
     "index": 84,
@@ -1169,11 +1169,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/erlotinib-accord",
     "slug": "erlotinib-accord",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Erlotinib Accord (EMEA_H_C_005071).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/erlotinib-accord-epar-product-information_en.pdf -> chrome124:http_404 | https://www.ema.europa.eu/en/documents/product-information/erlotinib-accord-epar-product-information_en_0.pdf -> chrome124:http_404 | https://www.ema.europa.eu/en/documents/product-information/erlotinib-accord-epar-product-information_en_1.pdf -> chrome124:http_404 | https://www.ema.europa.eu/en/documents/product-information/erlotinib-accord-epar-product-information_en_2.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 5,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/medicine-qa/questions-and-answers-withdrawal-application-marketing-authorisation-erlotinib-accord-erlotinib_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 6,
+    "size_bytes": 92558
   },
   {
     "index": 85,
@@ -1183,11 +1183,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/taxespira",
     "slug": "taxespira",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Taxespira (previously Docetaxel Hospira UK Limited ) (EMEA_H_C_003925).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/taxespira-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/taxespira-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 1774915
   },
   {
     "index": 86,
@@ -1197,11 +1197,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/topotecan-actavis",
     "slug": "topotecan-actavis",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Topotecan Actavis (EMEA_H_C_001031).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/topotecan-actavis-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/topotecan-actavis-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 766633
   },
   {
     "index": 87,
@@ -1225,11 +1225,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/adlumiz",
     "slug": "adlumiz",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Adlumiz (EMEA_H_C_003847).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/adlumiz-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/smop-initial/questions-and-answers-refusal-marketing-authorisation-adlumiz-anamorelin-hydrochloride_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 80644
   },
   {
     "index": 89,
@@ -1239,11 +1239,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/kyomarc",
     "slug": "kyomarc",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Kyomarc (EMEA_H_C_004360).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/kyomarc-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/medicine-qa/questions-and-answers-withdrawal-marketing-authorisation-application-kyomarc-bevacizumab_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 69444
   },
   {
     "index": 90,
@@ -1253,11 +1253,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/pemetrexed-ditromethamine-hospira",
     "slug": "pemetrexed-ditromethamine-hospira",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Pemetrexed ditromethamine Hospira (EMEA_H_C_004306).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/pemetrexed-ditromethamine-hospira-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/medicine-qa/questions-and-answers-withdrawal-marketing-authorisation-application-pemetrexed-ditromethamine-hospira_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 76677
   },
   {
     "index": 91,
@@ -1267,11 +1267,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/docetaxel-sun",
     "slug": "docetaxel-sun",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Docetaxel SUN (EMEA_H_C_004086).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/docetaxel-sun-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/medicine-qa/questions-and-answers-withdrawal-marketing-authorisation-application-docetaxel-sun-docetaxel_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 75275
   },
   {
     "index": 92,
@@ -1281,11 +1281,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/xegafri",
     "slug": "xegafri",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Xegafri (EMEA_H_C_004053).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/xegafri-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
+    "pdf_url": "https://www.ema.europa.eu/en/documents/medicine-qa/questions-and-answers-withdrawal-marketing-authorisation-application-xegafri-rociletinib_en.pdf",
+    "status": "downloaded",
+    "detail": "existing_pdf_verified:candidate_score=230",
     "attempts": 2,
-    "size_bytes": 0
+    "size_bytes": 69077
   },
   {
     "index": 93,
@@ -1295,11 +1295,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/nivolumab-bms",
     "slug": "nivolumab-bms",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Nivolumab BMS (EMEA_H_C_003840).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/nivolumab-bms-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/nivolumab-bms-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 1237655
   },
   {
     "index": 94,
@@ -1309,11 +1309,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/docetaxel-mylan-0",
     "slug": "docetaxel-mylan-0",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Docetaxel Mylan (EMEA_H_C_002317).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/docetaxel-mylan-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/docetaxel-mylan-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "existing_pdf_verified:candidate_score=300",
     "attempts": 2,
-    "size_bytes": 0
+    "size_bytes": 2333336
   },
   {
     "index": 95,
@@ -1337,11 +1337,11 @@
     "medicine_url": "https://www.ema.europa.eu/en/medicines/human/EPAR/docetaxel-teva-pharma",
     "slug": "docetaxel-teva-pharma",
     "file": "/Users/xuechao/medlinker/code/mg_down/cancer-data_ema_product_information_pdfs/Docetaxel Teva Pharma (EMEA_H_C_002032).pdf",
-    "pdf_url": "",
-    "status": "failed",
-    "detail": "https://www.ema.europa.eu/en/documents/product-information/docetaxel-teva-pharma-epar-product-information_en.pdf -> safari184:block_page:http_200:unknown",
-    "attempts": 2,
-    "size_bytes": 0
+    "pdf_url": "https://www.ema.europa.eu/en/documents/product-information/docetaxel-teva-pharma-epar-product-information_en.pdf",
+    "status": "downloaded",
+    "detail": "firefox_page_fetch:ok",
+    "attempts": 3,
+    "size_bytes": 907669
   },
   {
     "index": 97,
